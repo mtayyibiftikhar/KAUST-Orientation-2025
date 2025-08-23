@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tamimi @ KAUST — Food Map Challenge</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{ --bg:#0b0b0c; --card:#121214; --muted:#9ca3af; --text:#f6f7fb; --brand:#e11d2e; }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Inter,system-ui,sans-serif;color:var(--text);background:var(--bg)}
+    .container{max-width:1100px;margin:auto;padding:20px}
+    header{border-bottom:1px solid rgba(255,255,255,.1)}
+
+    /* HERO */
+    .hero-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;padding:36px 0}
+    @media (max-width:900px){ .hero-wrap{grid-template-columns:1fr} }
+    .logo-top img{height:54px}
+    .hero-cta{display:flex; gap:14px; margin-top:22px; flex-wrap:wrap}
+    .badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+    .title{font-size:clamp(26px,5vw,46px);font-weight:800;line-height:1.1;margin:10px 0}
+    .subtitle{color:var(--muted);font-size:clamp(14px,2vw,18px)}
+    .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.12)}
+    .progress-text{color:var(--muted);font-size:13px}
+     .btn{appearance:none; border:none; cursor:pointer; font-weight:700; padding:14px 18px; border-radius:14px; transition:transform .05s ease, background .2s ease, box-shadow .2s ease}
+    .btn-primary{background:linear-gradient(180deg, #ff2d3f, #c10f1e); color:white; box-shadow:0 10px 30px rgba(225,29,46,.25)}
+    .btn-primary:hover{transform:translateY(-1px)}
+    .btn-ghost{background:rgba(255,255,255,.05); color:#fff; border:1px solid rgba(255,255,255,.15)}
+    .cover{
+  width:100%;
+  aspect-ratio:16/9;
+  object-fit:cover;
+  display:block;
+  border-radius:12px;
+  background:#0e0e10; /* nice while loading */
+  
+}
+
+    /* OUTLETS */
+    .section{padding:36px 0}
+    .section h2{font-size:24px;font-weight:800;margin-bottom:10px}
+    .section p.section-desc{color:var(--muted);margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    @media (max-width:900px){ .grid{grid-template-columns:repeat(2,1fr)} }
+    @media (max-width:640px){ .grid{grid-template-columns:1fr} }
+    .card{background:var(--card);border-radius:16px;padding:14px;border:1px solid rgba(255,255,255,.1)}
+    .cover{height:110px;border-radius:12px;background:linear-gradient(115deg, rgba(225,29,46,.25), rgba(255,255,255,.04));margin-bottom:10px}
+    .pin{font-size:12px;color:#e5e7eb;opacity:.9}
+    .pill{display:inline-block;margin-top:6px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);font-size:12px}
+    .promo{color:var(--muted);font-size:14px;margin-top:6px}
+
+    /* FORM */
+    .form{display:grid;grid-template-columns:1fr 1fr;gap:16px;background:var(--card);padding:20px;border-radius:16px;border:1px solid rgba(255,255,255,.1)}
+    @media (max-width:640px){ .form{grid-template-columns:1fr} }
+    label{font-weight:600;font-size:14px;color:#d1d5db;display:block}
+    input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0e0e10;color:#fff;margin-top:6px}
+    input::placeholder{color:#6b7280}
+    .full{grid-column:1/-1}
+    button{padding:14px 16px;background:linear-gradient(180deg,#ff2d3f,#c10f1e);color:#fff;font-weight:700;border:none;border-radius:10px;cursor:pointer}
+
+    footer{border-top:1px solid rgba(255,255,255,.1);padding:20px 0;color:var(--muted);text-align:center;font-size:14px}
+
+    /* Toast */
+    .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#ffffff;padding:14px 20px;border-radius:10px;color:#111;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;border:1px solid rgba(255,255,255,.18);box-shadow:0 10px 30px rgba(0,0,0,.35)}
+    .toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(-5px)}
+
+
+/* Mobile-only: center the HERO text side and hide the map card */
+/* HERO: image only on mobile, SVG map hidden */
+.hero-media{ display:none; } /* hidden by default (desktop/tablet) */
+
+@media (max-width:640px){
+  .hero-card{ display:none !important; }   /* hide the map card on mobile */
+  .hero-media{ display:block; margin-top:12px; border-radius:16px; overflow:hidden; }
+  .hero-media .hero-img{ width:100%; height:auto; display:block; } /* stick to width */
+
+  /* (optional) center the hero text on mobile */
+  .hero-wrap{ grid-template-columns:1fr; justify-items:center; row-gap:20px; padding:28px 0 14px; }
+  .hero-wrap > div:first-child{ text-align:center; max-width:640px; }
+  .logo-top{ display:flex; justify-content:center; }
+  .hero-cta{ flex-direction:column; align-items:center; gap:14px; margin-top:12px; }
+  .hero-cta .btn{ width:min(100%, 320px); padding:16px 18px; }
+}
+@media (max-width:640px){
+  .hero-wrap{
+    grid-template-columns: 1fr;
+    justify-items: center;      /* center the grid contents */
+    row-gap: 20px;
+    padding: 28px 0 14px;
+  }
+
+  /* hide the right-side map card on mobile */
+  .hero-card{
+    display: none !important;
+  }
+
+  /* text column (left side) */
+  .hero-wrap > div:first-child{
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* center the logo row */
+  .logo-top{ display:flex; justify-content:center; }
+
+  .badge{ margin: 8px auto 6px; }
+
+  .title{
+    font-size: 28px;     /* fixed, readable size on small screens */
+    line-height: 1.3;
+    margin: 10px 0 6px;
+    letter-spacing: .1px;
+  }
+
+  .subtitle{
+    font-size: 16px;
+    line-height: 1.75;
+    margin: 8px 0 14px;
+  }
+
+  /* stack & center buttons with comfy tap targets */
+  .hero-cta{
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 12px;
+  }
+  .hero-cta .btn{
+    width: min(100%, 320px);
+    padding: 16px 18px;
+  }
+}
+
+/* Mobile-only polish for the QC section */
+@media (max-width:640px){
+  #qc{
+    text-align:center;
+    padding: 32px 0 40px;        /* a bit more breathing room */
+  }
+  #qc h2{
+    font-size: 22px;             /* clear but not huge */
+    line-height: 1.3;
+    margin: 6px 0 10px;
+  }
+  #qc .section-desc{
+    font-size: 15.5px;
+    line-height: 1.75;           /* easier reading */
+    margin: 8px auto 16px;
+    max-width: 42ch;             /* nicer line length */
+  }
+  #qc .btn{
+    width: min(100%, 320px);     /* comfy tap target */
+    padding: 16px 18px;
+    display: inline-flex;
+    justify-content: center;
+  }
+}
+
+
+  </style>
+</head>
+<body>
+  <header class="container">
+   
+    <div class="hero-wrap">
+      <div>
+         <div class="logo-top">
+  <img
+    src="img/logo1.png"
+    alt="Tamimi Logo"
+    style="height:clamp(156px, 20vw, 188px); width:auto; object-fit:contain; display:block;"
+    decoding="async"
+    fetchpriority="high"
+  >
+</div>
+        <span class="badge">Tamimi @ KAUST · Orientation 2025</span>
+        <h1 class="title">Food Map Challenge — Visit All 6 Tamimi Outlets & <span style="color:var(--brand)">Win SAR 75</span></h1>
+        <p class="subtitle">Dine across the 6 amazing outlets of Tamimi—explore global cuisines, taste the best, and complete your food journey. Register below, then enjoy all Tamimi spots to unlock your reward voucher.</p>
+       <div class="hero-cta">
+          <a href="#register" class="btn btn-primary">Join the Challenge</a>
+          <a href="#outlets" class="btn btn-ghost">See Outlets</a>
+        </div>
+        <!-- <div class="hero-card"><strong>Progress</strong><div class="progress-text">0 / 6 — Complete all 6 locations</div></div> -->
+      </div>
+      <!-- hero mobile Image  -->
+
+
+      <div class="hero-media">
+      <img src="img/hero.png"
+           alt="KAUST campus dining — Tamimi outlets collage"
+           class="hero-img"
+           loading="eager" decoding="async" fetchpriority="high">
+    </div>
+    <!-- new Data Here -->
+ <div class="hero-card" style="min-height:280px">
+    
+        <svg viewBox="0 0 520 280" width="100%" height="100%" role="img" aria-label="Stylized campus map with outlet pins">
+          <defs>
+            <linearGradient id="glow" x1="0" x2="1">
+              <stop offset="0" stop-color="#e11d2e"/>
+              <stop offset="1" stop-color="#ffffff"/>
+            </linearGradient>
+            <filter id="blur"><feGaussianBlur stdDeviation="6"/></filter>
+          </defs>
+          <rect x="0" y="0" width="520" height="280" fill="#0e0e10" rx="16"/>
+          <g opacity=".4">
+            <path d="M10 60 Q 130 40 260 80 T 510 60" stroke="url(#glow)" fill="none"/>
+            <path d="M10 120 Q 130 100 260 140 T 510 120" stroke="url(#glow)" fill="none"/>
+            <path d="M10 180 Q 130 160 260 200 T 510 180" stroke="url(#glow)" fill="none"/>
+          </g>
+          <!-- Pins -->
+          <g>
+            <circle cx="110" cy="70" r="8" fill="#e11d2e"/>
+            <text x="126" y="74" fill="#fff" font-size="12">Harbor Restaurant</text>
+          </g>
+          <g>
+            <circle cx="360" cy="70" r="8" fill="#e11d2e"/>
+            <text x="376" y="74" fill="#fff" font-size="12">Steak Seven</text>
+          </g>
+          <g>
+            <circle cx="80" cy="130" r="8" fill="#e11d2e"/>
+            <text x="96" y="134" fill="#fff" font-size="12">Campus Diner</text>
+          </g>
+          <g>
+            <circle cx="430" cy="130" r="8" fill="#e11d2e"/>
+            <text x="446" y="134" fill="#fff" font-size="12">10th Hole</text>
+          </g>
+          <g>
+            <circle cx="220" cy="190" r="8" fill="#e11d2e"/>
+            <text x="236" y="194" fill="#fff" font-size="12">Pure</text>
+          </g>
+          <g>
+            <circle cx="320" cy="210" r="8" fill="#e11d2e"/>
+            <text x="336" y="214" fill="#fff" font-size="12">Subs & Greens</text>
+          </g>
+          <g opacity=".2" filter="url(#blur)">
+            <circle cx="110" cy="70" r="16" fill="#e11d2e"/>
+            <circle cx="360" cy="70" r="16" fill="#e11d2e"/>
+            <circle cx="80" cy="130" r="16" fill="#e11d2e"/>
+            <circle cx="430" cy="130" r="16" fill="#e11d2e"/>
+            <circle cx="220" cy="190" r="16" fill="#e11d2e"/>
+            <circle cx="320" cy="210" r="16" fill="#e11d2e"/>
+          </g>
+        </svg>
+      </div>
+
+
+
+    </div>
+  </header>
+
+
+
+  
+  <main class="container">
+       <!-- OUTLETS SECTION (restored) -->
+    <section id="outlets" class="section">
+      <h2>Explore the Outlets</h2>
+      <p class="section-desc">Dine at all six Tamimi locations at KAUST. Keep receipts/screenshots as proof; we’ll verify before issuing your <strong>SAR 75</strong> voucher.</p>
+      <div class="grid">
+        <article class="card">
+          <img class="cover"
+            src="img/harbor.png"
+            width="1200" height="675"
+            alt="Harbor Restaurant at Harbor Sports Club"
+            loading="lazy" decoding="async">
+          <div class="pin">Harbor Sports Club</div>
+          <div class="pill">Harbor Restaurant</div>
+          <p class="promo">Your spot for Arabic delights—Mutabbal Ajmi and Egyptian Hawawshi.</p>
+        </article>
+        <article class="card">
+         <img class="cover"
+            src="img/s7.png"
+            width="1200" height="675"
+            alt="Steak Seven Restaurant"
+            loading="lazy" decoding="async"> 
+          <div class="pin">Racquet Club</div>
+          <div class="pill">Steak Seven Restaurant</div>
+          <p class="promo">Your spot for juicy fire-grilled steaks, fresh seafood, and tasty veggie bites.</p>
+        </article>
+        <article class="card">
+          <img class="cover"
+     src="img/golf.png"
+     width="1200" height="675"
+     alt="Saffa Golf Club"
+     loading="lazy" decoding="async">
+          <div class="pin">Saffa Golf Club</div>
+          <div class="pill">10th Hole Restaurant</div>
+          <p class="promo">Your spot for a South Asian twist—try our Sri Lankan Spicy Seafood Curry.</p>
+        </article>
+        <article class="card">
+         <img class="cover"
+     src="img/cd.png"
+     width="1200" height="675"
+     alt="Campus Diner"
+     loading="lazy" decoding="async">
+          <div class="pin">Campus Building 13</div>
+          <div class="pill">Campus Diner</div>
+          <p class="promo">Your spot for fast, friendly, and classic diner favorites between classes.</p>
+        </article>
+        <article class="card">
+         <img class="cover"
+     src="img/pure.png"
+     width="1200" height="675"
+     alt="Pure Restaurant"
+     loading="lazy" decoding="async">
+          <div class="pin">Island Recreation Club</div>
+          <div class="pill">Pure Restaurant</div>
+          <p class="promo">Your spot for sea-view dining—savor our rich Clay Pot Seafood.</p>
+        </article>
+        <article class="card">
+        <img class="cover"
+     src="img/sg.png"
+     width="1200" height="675"
+     alt="Subs & Greens Diner"
+     loading="lazy" decoding="async">
+          <div class="pin">Research & Technology Park</div>
+          <div class="pill">Subs & Greens Diner</div>
+          <p class="promo">Your spot for fresh, healthy eats—build your own sandwich or salad.</p>
+        </article>
+      </div>
+    </section>
+
+ <!-- REGISTER -->
+    <section id="register" class="section">
+      <h2>Register for the Challenge</h2>
+      <form id="challenge-form" class="form" autocomplete="on" novalidate>
+        <div>
+          <label for="name">Full Name
+            <input id="name" name="name" type="text" placeholder="e.g., Muhammad Tayyib" minlength="2" required>
+          </label>
+        </div>
+        <div>
+          <label for="email">Email
+            <input id="email" name="email" type="email" placeholder="your.name@kaust.edu.sa" required>
+          </label>
+        </div>
+        <div class="full">
+          <label for="phone">Phone (with country code)
+            <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="e.g., +9665XXXXXXXX" required>
+          </label>
+          <div class="subtitle" style="font-size:12px">Use international format starting with <strong>+</strong> (e.g., <strong>+9665XXXXXXXX</strong>). “00” is also accepted and converted to “+”.</div>
+        </div>
+        <div class="full" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button type="submit">Submit & Join</button>
+        </div>
+      </form>
+    </section>
+
+ 
+   
+
+    <!-- QC CTA -->
+    <section id="qc" class="section">
+      <h2>Learn About QC at Tamimi</h2>
+      <p class="section-desc">Discover how Tamimi ensures food safety and quality across all outlets. Our Quality Control page will highlight standards, processes, and commitment to excellence.</p>
+      <a href="https://drive.google.com/file/d/1Mfmka0Ly_L290rtgufzvrCZyC9eLt51p/view?usp=sharing"
+   class="btn btn-primary"
+   target="_blank"
+   rel="noopener noreferrer">Go to QC Page</a>
+    
+    </section>
+  </main>
+
+    <footer>
+    Made with ❤️ by <a href="mailto:tayyibiftikhar@mail.com?subject=query">Muhammad Tayyib</a> &copy; 2025
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite">Success! You’re registered 🎉</div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRlMHA4ibKzPmUDlC889RvjNqYc0Tq_CTADLZ1MiluxeiueoPlF3FzQFIcwyxLHXElqQ/exec";
+    const form = document.getElementById('challenge-form');
+    const toast = document.getElementById('toast');
+
+    function showToast(msg){toast.textContent=msg;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),3000)}
+    function normalizePhone(p){let s=(p||'').trim().replace(/\s|-/g,'');if(s.startsWith('00')) s='+'+s.slice(2);return s}
+    function isValidIntlPhone(p){return /^\+[0-9]{8,15}$/.test(p)}
+    function isValidEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((e||'').trim())}
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      const name=(data.name||'').trim();
+      const email=(data.email||'').trim();
+      const phone=normalizePhone((data.phone||'').trim());
+      if(name.length<2 || !isValidEmail(email) || !isValidIntlPhone(phone)){
+        showToast('Use international format, e.g., +9665XXXXXXXX.');
+        return;
+      }
+      try{
+        await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone,source:'Food Map Challenge Landing Page'})});
+        form.reset();
+        showToast('Success! You\'re registered 🎉');
+      }catch(err){console.error(err);showToast('Could not submit, try again later.')}
+    });
+  </script>
+</body>
+</html>
