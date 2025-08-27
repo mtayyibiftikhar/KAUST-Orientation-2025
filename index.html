@@ -22,19 +22,18 @@
     .subtitle{color:var(--muted);font-size:clamp(14px,2vw,18px)}
     .hero-card{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));padding:16px;border-radius:16px;border:1px solid rgba(255,255,255,.12)}
     .progress-text{color:var(--muted);font-size:13px}
-     .btn{appearance:none; border:none; cursor:pointer; font-weight:700; padding:14px 18px; border-radius:14px; transition:transform .05s ease, background .2s ease, box-shadow .2s ease}
+    .btn{appearance:none; border:none; cursor:pointer; font-weight:700; padding:14px 18px; border-radius:14px; transition:transform .05s ease, background .2s ease, box-shadow .2s ease}
     .btn-primary{background:linear-gradient(180deg, #ff2d3f, #c10f1e); color:white; box-shadow:0 10px 30px rgba(225,29,46,.25)}
     .btn-primary:hover{transform:translateY(-1px)}
     .btn-ghost{background:rgba(255,255,255,.05); color:#fff; border:1px solid rgba(255,255,255,.15)}
     .cover{
-  width:100%;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  display:block;
-  border-radius:12px;
-  background:#0e0e10; /* nice while loading */
-  
-}
+      width:100%;
+      aspect-ratio:16/9;
+      object-fit:cover;
+      display:block;
+      border-radius:12px;
+      background:#0e0e10; /* nice while loading */
+    }
 
     /* OUTLETS */
     .section{padding:36px 0}
@@ -64,137 +63,121 @@
     .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#ffffff;padding:14px 20px;border-radius:10px;color:#111;opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;border:1px solid rgba(255,255,255,.18);box-shadow:0 10px 30px rgba(0,0,0,.35)}
     .toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(-5px)}
 
+    /* Mobile-only: center the HERO text side and hide the map card */
+    /* HERO: image only on mobile, SVG map hidden */
+    .hero-media{ display:none; } /* hidden by default (desktop/tablet) */
 
-/* Mobile-only: center the HERO text side and hide the map card */
-/* HERO: image only on mobile, SVG map hidden */
-.hero-media{ display:none; } /* hidden by default (desktop/tablet) */
+    @media (max-width:640px){
+      .hero-card{ display:none !important; }   /* hide the map card on mobile */
+      .hero-media{ display:block; margin-top:12px; border-radius:16px; overflow:hidden; }
+      .hero-media .hero-img{ width:100%; height:auto; display:block; } /* stick to width */
 
-@media (max-width:640px){
-  .hero-card{ display:none !important; }   /* hide the map card on mobile */
-  .hero-media{ display:block; margin-top:12px; border-radius:16px; overflow:hidden; }
-  .hero-media .hero-img{ width:100%; height:auto; display:block; } /* stick to width */
+      /* center the hero text on mobile */
+      .hero-wrap{ grid-template-columns:1fr; justify-items:center; row-gap:20px; padding:28px 0 14px; }
+      .hero-wrap > div:first-child{ text-align:center; max-width:640px; }
+      .logo-top{ display:flex; justify-content:center; }
+      .hero-cta{ flex-direction:column; align-items:center; gap:14px; margin-top:12px; }
+      .hero-cta .btn{ width:min(100%, 320px); padding:16px 18px; }
+    }
+    @media (max-width:640px){
+      .hero-wrap{
+        grid-template-columns: 1fr;
+        justify-items: center;      /* center the grid contents */
+        row-gap: 20px;
+        padding: 28px 0 14px;
+      }
+      .hero-card{ display: none !important; } /* hide the right-side map card on mobile */
+      .hero-wrap > div:first-child{ text-align: center; max-width: 640px; margin: 0 auto; }
+      .logo-top{ display:flex; justify-content:center; }
+      .badge{ margin: 8px auto 6px; }
+      .title{ font-size: 28px; line-height: 1.3; margin: 10px 0 6px; letter-spacing: .1px; }
+      .subtitle{ font-size: 16px; line-height: 1.75; margin: 8px 0 14px; }
+      .hero-cta{ flex-direction: column; align-items: center; gap: 14px; margin-top: 12px; }
+      .hero-cta .btn{ width: min(100%, 320px); padding: 16px 18px; }
+    }
 
-  /* (optional) center the hero text on mobile */
-  .hero-wrap{ grid-template-columns:1fr; justify-items:center; row-gap:20px; padding:28px 0 14px; }
-  .hero-wrap > div:first-child{ text-align:center; max-width:640px; }
-  .logo-top{ display:flex; justify-content:center; }
-  .hero-cta{ flex-direction:column; align-items:center; gap:14px; margin-top:12px; }
-  .hero-cta .btn{ width:min(100%, 320px); padding:16px 18px; }
-}
-@media (max-width:640px){
-  .hero-wrap{
-    grid-template-columns: 1fr;
-    justify-items: center;      /* center the grid contents */
-    row-gap: 20px;
-    padding: 28px 0 14px;
-  }
+    /* Mobile-only polish for the QC section */
+    @media (max-width:640px){
+      #qc{
+        text-align:center;
+        padding: 32px 0 40px;
+      }
+      #qc h2{
+        font-size: 22px;
+        line-height: 1.3;
+        margin: 6px 0 10px;
+      }
+      #qc .section-desc{
+        font-size: 15.5px;
+        line-height: 1.75;
+        margin: 8px auto 16px;
+        max-width: 42ch;
+      }
+      #qc .btn{
+        width: min(100%, 320px);
+        padding: 16px 18px;
+        display: inline-flex;
+        justify-content: center;
+      }
+    }
 
-  /* hide the right-side map card on mobile */
-  .hero-card{
-    display: none !important;
-  }
-
-  /* text column (left side) */
-  .hero-wrap > div:first-child{
-    text-align: center;
-    max-width: 640px;
-    margin: 0 auto;
-  }
-
-  /* center the logo row */
-  .logo-top{ display:flex; justify-content:center; }
-
-  .badge{ margin: 8px auto 6px; }
-
-  .title{
-    font-size: 28px;     /* fixed, readable size on small screens */
-    line-height: 1.3;
-    margin: 10px 0 6px;
-    letter-spacing: .1px;
-  }
-
-  .subtitle{
-    font-size: 16px;
-    line-height: 1.75;
-    margin: 8px 0 14px;
-  }
-
-  /* stack & center buttons with comfy tap targets */
-  .hero-cta{
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-    margin-top: 12px;
-  }
-  .hero-cta .btn{
-    width: min(100%, 320px);
-    padding: 16px 18px;
-  }
-}
-
-/* Mobile-only polish for the QC section */
-@media (max-width:640px){
-  #qc{
-    text-align:center;
-    padding: 32px 0 40px;        /* a bit more breathing room */
-  }
-  #qc h2{
-    font-size: 22px;             /* clear but not huge */
-    line-height: 1.3;
-    margin: 6px 0 10px;
-  }
-  #qc .section-desc{
-    font-size: 15.5px;
-    line-height: 1.75;           /* easier reading */
-    margin: 8px auto 16px;
-    max-width: 42ch;             /* nicer line length */
-  }
-  #qc .btn{
-    width: min(100%, 320px);     /* comfy tap target */
-    padding: 16px 18px;
-    display: inline-flex;
-    justify-content: center;
-  }
-}
-
-
+    /* Success overlay (non-intrusive) */
+    #success-overlay{display:none; position:fixed; inset:0; z-index:9999; background:var(--bg); overflow:auto;}
+    #success-overlay.show{display:block;}
+    .success-inner{max-width:900px; margin:0 auto; padding:32px 20px;}
+    .success-card{
+      background:var(--card);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:28px;
+      text-align:center;
+    }
+    .success-icon{font-size:48px; margin-bottom:8px}
+    .success-title{font-size:clamp(26px,5vw,40px); font-weight:800; margin:8px 0}
+    .success-subtitle{color:var(--muted); line-height:1.7; margin:6px 0 12px}
+    .success-meta{color:#d1d5db; font-weight:600; margin-top:10px}
+    .success-value{font-size:16px}
+    .success-note{color:var(--muted); line-height:1.7; margin-top:16px}
+    .success-cta{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px}
+    .success-cta .btn{padding:14px 18px; border-radius:14px}
+    @media (max-width:640px){
+      #success-overlay{padding:28px 0 40px}
+      .success-cta .btn{width:min(100%,320px)}
+    }
   </style>
 </head>
 <body>
   <header class="container">
-   
     <div class="hero-wrap">
       <div>
-         <div class="logo-top">
-  <img
-    src="img/logo1.png"
-    alt="Tamimi Logo"
-    style="height:clamp(156px, 20vw, 188px); width:auto; object-fit:contain; display:block;"
-    decoding="async"
-    fetchpriority="high"
-  >
-</div>
+        <div class="logo-top">
+          <img
+            src="img/logo1.png"
+            alt="Tamimi Logo"
+            style="height:clamp(156px, 20vw, 188px); width:auto; object-fit:contain; display:block;"
+            decoding="async"
+            fetchpriority="high">
+        </div>
         <span class="badge">Tamimi @ KAUST · Orientation 2025</span>
         <h1 class="title">Food Map Challenge — Visit All 6 Tamimi Outlets & <span style="color:var(--brand)">Win SAR 75</span></h1>
         <p class="subtitle">Dine across the 6 amazing outlets of Tamimi—explore global cuisines, taste the best, and complete your food journey. Register below, then enjoy all Tamimi spots to unlock your reward voucher.</p>
-       <div class="hero-cta">
+        <div class="hero-cta">
           <a href="#register" class="btn btn-primary">Join the Challenge</a>
           <a href="#outlets" class="btn btn-ghost">See Outlets</a>
         </div>
         <!-- <div class="hero-card"><strong>Progress</strong><div class="progress-text">0 / 6 — Complete all 6 locations</div></div> -->
       </div>
+
       <!-- hero mobile Image  -->
-
-
       <div class="hero-media">
-      <img src="img/hero.png"
-           alt="KAUST campus dining — Tamimi outlets collage"
-           class="hero-img"
-           loading="eager" decoding="async" fetchpriority="high">
-    </div>
-    <!-- new Data Here -->
- <div class="hero-card" style="min-height:280px">
-    
+        <img src="img/hero.png"
+             alt="KAUST campus dining — Tamimi outlets collage"
+             class="hero-img"
+             loading="eager" decoding="async" fetchpriority="high">
+      </div>
+
+      <!-- new Data Here -->
+      <div class="hero-card" style="min-height:280px">
         <svg viewBox="0 0 520 280" width="100%" height="100%" role="img" aria-label="Stylized campus map with outlet pins">
           <defs>
             <linearGradient id="glow" x1="0" x2="1">
@@ -244,20 +227,14 @@
           </g>
         </svg>
       </div>
-
-
-
     </div>
   </header>
 
-
-
-  
   <main class="container">
-       <!-- OUTLETS SECTION (restored) -->
+    <!-- OUTLETS SECTION (restored) -->
     <section id="outlets" class="section">
       <h2>Explore the Outlets</h2>
-      <p class="section-desc">Dine at all six Tamimi locations at KAUST. Keep receipts/screenshots as proof; we’ll verify before issuing your <strong>SAR 75</strong> voucher.</p>
+      <p class="section-desc">Dine at all six Tamimi locations at KAUST. Keep receipts/screenshots as proof; we’ll verify before issuing your <strong>SAR 75</strong> voucher.</p>
       <div class="grid">
         <article class="card">
           <img class="cover"
@@ -270,51 +247,51 @@
           <p class="promo">Your spot for Arabic delights—Mutabbal Ajmi and Egyptian Hawawshi.</p>
         </article>
         <article class="card">
-         <img class="cover"
+          <img class="cover"
             src="img/s7.png"
             width="1200" height="675"
             alt="Steak Seven Restaurant"
-            loading="lazy" decoding="async"> 
+            loading="lazy" decoding="async">
           <div class="pin">Racquet Club</div>
           <div class="pill">Steak Seven Restaurant</div>
           <p class="promo">Your spot for juicy fire-grilled steaks, fresh seafood, and tasty veggie bites.</p>
         </article>
         <article class="card">
           <img class="cover"
-     src="img/golf.png"
-     width="1200" height="675"
-     alt="Saffa Golf Club"
-     loading="lazy" decoding="async">
+            src="img/golf.png"
+            width="1200" height="675"
+            alt="Saffa Golf Club"
+            loading="lazy" decoding="async">
           <div class="pin">Saffa Golf Club</div>
           <div class="pill">10th Hole Restaurant</div>
           <p class="promo">Your spot for a South Asian twist—try our Sri Lankan Spicy Seafood Curry.</p>
         </article>
         <article class="card">
-         <img class="cover"
-     src="img/cd.png"
-     width="1200" height="675"
-     alt="Campus Diner"
-     loading="lazy" decoding="async">
+          <img class="cover"
+            src="img/cd.png"
+            width="1200" height="675"
+            alt="Campus Diner"
+            loading="lazy" decoding="async">
           <div class="pin">Campus Building 13</div>
           <div class="pill">Campus Diner</div>
           <p class="promo">Your spot for fast, friendly, and classic diner favorites between classes.</p>
         </article>
         <article class="card">
-         <img class="cover"
-     src="img/pure.png"
-     width="1200" height="675"
-     alt="Pure Restaurant"
-     loading="lazy" decoding="async">
+          <img class="cover"
+            src="img/pure.png"
+            width="1200" height="675"
+            alt="Pure Restaurant"
+            loading="lazy" decoding="async">
           <div class="pin">Island Recreation Club</div>
           <div class="pill">Pure Restaurant</div>
           <p class="promo">Your spot for sea-view dining—savor our rich Clay Pot Seafood.</p>
         </article>
         <article class="card">
-        <img class="cover"
-     src="img/sg.png"
-     width="1200" height="675"
-     alt="Subs & Greens Diner"
-     loading="lazy" decoding="async">
+          <img class="cover"
+            src="img/sg.png"
+            width="1200" height="675"
+            alt="Subs & Greens Diner"
+            loading="lazy" decoding="async">
           <div class="pin">Research & Technology Park</div>
           <div class="pill">Subs & Greens Diner</div>
           <p class="promo">Your spot for fresh, healthy eats—build your own sandwich or salad.</p>
@@ -322,7 +299,7 @@
       </div>
     </section>
 
- <!-- REGISTER -->
+    <!-- REGISTER -->
     <section id="register" class="section">
       <h2>Register for the Challenge</h2>
       <form id="challenge-form" class="form" autocomplete="on" novalidate>
@@ -348,22 +325,46 @@
       </form>
     </section>
 
- 
-   
-
     <!-- QC CTA -->
     <section id="qc" class="section">
       <h2>Learn About QC at Tamimi</h2>
       <p class="section-desc">Discover how Tamimi ensures food safety and quality across all outlets. Our Quality Control page will highlight standards, processes, and commitment to excellence.</p>
-      <a href="https://drive.google.com/file/d/1d3i64Gzv5WnjhATYyGo0EnEzcEbt76Fr/view?usp=sharing"
-   class="btn btn-primary"
-   target="_blank"
-   rel="noopener noreferrer">Go to QC Page</a>
-    
+      <a href="https://drive.google.com/file/d/1Mfmka0Ly_L290rtgufzvrCZyC9eLt51p/view?usp=sharing"
+         class="btn btn-primary"
+         target="_blank"
+         rel="noopener noreferrer">Go to QC Page</a>
     </section>
   </main>
 
-    <footer>
+  <!-- SUCCESS PAGE (hidden until form submit) -->
+  <section id="success-overlay" aria-live="polite">
+    <div class="container success-inner">
+      <div class="success-card">
+        <div class="success-icon">🎉</div>
+        <h1 class="success-title">Congrats! You’re registered for the challenge</h1>
+        <p class="success-subtitle">Welcome to the Tamimi @ KAUST Food Map Challenge.</p>
+
+        <div class="success-details">
+          <div class="success-meta">Name</div>
+          <div id="s-name" class="success-value"></div>
+          <div class="success-meta">Email</div>
+          <div id="s-email" class="success-value"></div>
+        </div>
+
+        <p class="success-note">
+          Please visit any Tamimi outlet to get your <strong>Food Map card</strong> if you don’t have it yet.
+          <br><strong>Keep this screen or a screenshot</strong> to show at the counter for quick verification.
+        </p>
+
+        <div class="success-cta">
+          <a href="#outlets" class="btn btn-ghost" id="view-outlets">See Outlets</a>
+          <a href="#" class="btn btn-primary" id="done">Done</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
     Made with ❤️ by <a href="mailto:tayyibiftikhar@mail.com?subject=query">Muhammad Tayyib</a> &copy; 2025
   </footer>
 
@@ -379,6 +380,35 @@
     function isValidIntlPhone(p){return /^\+[0-9]{8,15}$/.test(p)}
     function isValidEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((e||'').trim())}
 
+    function showSuccess(name,email){
+      // Fill details
+      const sName = document.getElementById('s-name');
+      const sEmail = document.getElementById('s-email');
+      if(sName) sName.textContent = name || '';
+      if(sEmail) sEmail.textContent = email || '';
+      // Reset form but keep the overlay visible
+      if(form) form.reset();
+      // Reveal overlay
+      const overlay = document.getElementById('success-overlay');
+      if(overlay){ overlay.classList.add('show'); window.scrollTo({top:0, behavior:'smooth'}); }
+    }
+
+    // Close overlay or navigate
+    document.addEventListener('click', (e)=>{
+      const closeBtn = e.target.closest && e.target.closest('#done');
+      const toOutlets = e.target.closest && e.target.closest('#view-outlets');
+      if(closeBtn){
+        e.preventDefault();
+        const overlay = document.getElementById('success-overlay');
+        if(overlay) overlay.classList.remove('show');
+        window.scrollTo({top:0, behavior:'smooth'});
+      }
+      if(toOutlets){
+        const overlay = document.getElementById('success-overlay');
+        if(overlay) overlay.classList.remove('show');
+      }
+    });
+
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form).entries());
@@ -390,12 +420,19 @@
         return;
       }
       try{
-        await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,email,phone,source:'Food Map Challenge Landing Page'})});
-        form.reset();
-        showToast('Success! You\'re registered 🎉');
-      }catch(err){console.error(err);showToast('Could not submit, try again later.')}
+        await fetch(SCRIPT_URL,{
+          method:'POST',
+          mode:'no-cors',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({name,email,phone,source:'Food Map Challenge Landing Page'})
+        });
+        // On success: show overlay (no toast)
+        showSuccess(name, email);
+      }catch(err){
+        console.error(err);
+        showToast('Could not submit, try again later.');
+      }
     });
   </script>
 </body>
 </html>
-
